@@ -5,7 +5,7 @@ if __name__ == "__main__":
     result = asyncio.run(fetch_available_times(
         url="https://map.naver.com/p/entry/place/1712597581?c=14.98,0,0,0,dh",
         room_name="블랙룸",
-        date="2025-04-10",
+        date="2025-06-10",
         hour_slots=["11:00"]
     ))
     

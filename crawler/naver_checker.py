@@ -1,9 +1,8 @@
-# crawler/naver_checker.py
 from playwright.async_api import async_playwright
 import re
+from datetime import datetime
 
 def convert_korean_time(text: str) -> str:
-    """한글 시간 표현 ('오전 3시', '오후 2시', '5시')를 'HH:MM'으로 변환"""
     match = re.match(r'(오전|오후)?\s?(\d{1,2})시', text)
     if not match:
         return None
@@ -72,12 +71,33 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
         
         await page.wait_for_load_state("domcontentloaded")
         await page.wait_for_timeout(1500)
-        
-        # Step 4: 날짜 클릭 (page 기준)
+
+        # ✅ Step 4: 달력 월 이동 처리
+        target_year, target_month = map(int, date.split("-")[:2])
+        for _ in range(6):  # 최대 6번 클릭
+            title_elem = await page.wait_for_selector("div.calendar_title", timeout=5000)
+            title_text = await title_elem.inner_text()
+            match = re.search(r'(\d{4})\.(\d{1,2})', title_text)
+            if not match:
+                print("❌ 달력의 현재 월 정보를 읽을 수 없습니다.")
+                break
+            curr_year, curr_month = map(int, match.groups())
+            if (curr_year, curr_month) == (target_year, target_month):
+                print(f"✅ 목표 달 도달: {curr_year}.{curr_month}")
+                break
+            next_btn = await title_elem.query_selector("button.btn_next")
+            if next_btn:
+                await next_btn.click()
+                await page.wait_for_timeout(800)
+            else:
+                print("❌ 다음 달 버튼을 찾을 수 없습니다.")
+                break
+
+        # Step 5: 날짜 클릭
         await page.wait_for_selector("button.calendar_date", timeout=10000)
         date_buttons = await page.query_selector_all("button.calendar_date")
+        selected_day = date[-2:].lstrip("0")  # ex: "2025-06-10" → "10"
 
-        selected_day = date[-2:].lstrip("0")  # 예: "2025-04-05" → "5"
         date_clicked = False
         for btn in date_buttons:
             num_span = await btn.query_selector("span.num")
@@ -98,12 +118,12 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
             print(f"❌ 날짜 '{selected_day}'을 클릭할 수 없습니다.")
             await browser.close()
             return []
-        
+
         await page.wait_for_timeout(1500)
         print("🔍 시간 슬롯 검사 중...")
 
         # Step 6: 시간 슬롯 확인
-        await page.wait_for_selector("li.time_item.no_time", timeout=10000)
+        await page.wait_for_selector("li.time_item", timeout=10000)
         time_items = await page.query_selector_all("li.time_item")
 
         result = {}
@@ -113,9 +133,7 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
 
             time_span = await item.query_selector("span.time_text")
             if not time_span:
-                print("❌ 시간 텍스트를 찾지 못함")
                 continue
-
             raw_text = await time_span.inner_text()
             raw_text = raw_text.replace("\n", "").strip()
             converted = convert_korean_time(raw_text)

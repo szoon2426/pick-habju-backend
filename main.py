@@ -6,7 +6,7 @@ if __name__ == "__main__":
         url="https://map.naver.com/p/entry/place/1712597581?c=14.98,0,0,0,dh",
         room_name="블랙룸",
         date="2025-04-10",
-        hour_slots=["15:00", "16:00"]
+        hour_slots=["11:00"]
     ))
     
     print("예약 가능 여부:")

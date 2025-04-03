@@ -100,9 +100,10 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
             return []
         
         await page.wait_for_timeout(1500)
-        
+        print("🔍 시간 슬롯 검사 중...")
+
         # Step 6: 시간 슬롯 확인
-        await page.wait_for_selector("div.time_area", timeout=10000)
+        await page.wait_for_selector("li.time_item.no_time", timeout=10000)
         time_items = await page.query_selector_all("li.time_item")
 
         result = {}
@@ -111,12 +112,18 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
             is_available = "disabled" not in class_attr
 
             time_span = await item.query_selector("span.time_text")
-            time_text_raw = await time_span.inner_text()
-            time_text_cleaned = time_text_raw.replace("\n", "").strip()
-            converted_time = convert_korean_time(time_text_cleaned)
+            if not time_span:
+                print("❌ 시간 텍스트를 찾지 못함")
+                continue
 
-            if converted_time and converted_time in hour_slots:
-                result[converted_time] = is_available
+            raw_text = await time_span.inner_text()
+            raw_text = raw_text.replace("\n", "").strip()
+            converted = convert_korean_time(raw_text)
+
+            print(f"🕒 슬롯: '{raw_text}' → {converted} / {'가능' if is_available else '불가능'}")
+
+            if converted and converted in hour_slots:
+                result[converted] = is_available
 
         await browser.close()
         return result

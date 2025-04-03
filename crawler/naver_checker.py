@@ -39,7 +39,7 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
         else:
             print("❌ 예약 버튼을 찾을 수 없습니다.")
             await browser.close()
-            return []
+            return {}
         
         # Step 3: '블랙룸' 텍스트가 포함된 예약 링크 클릭 (iframe 안에서 찾기)
         await entry_frame.wait_for_selector("a.place_bluelink", timeout=10000)
@@ -67,7 +67,7 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
         if not found:
             print(f"❌ '{room_name}' 링크를 찾을 수 없습니다.")
             await browser.close()
-            return []
+            return {}
         
         await page.wait_for_load_state("domcontentloaded")
         await page.wait_for_timeout(1500)
@@ -117,7 +117,7 @@ async def fetch_available_times(url: str, room_name: str, date: str, hour_slots:
         if not date_clicked:
             print(f"❌ 날짜 '{selected_day}'을 클릭할 수 없습니다.")
             await browser.close()
-            return []
+            return {}
 
         await page.wait_for_timeout(1500)
         print("🔍 시간 슬롯 검사 중...")

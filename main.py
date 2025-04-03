@@ -10,8 +10,6 @@ if __name__ == "__main__":
     ))
     
     print("예약 가능 여부:")
-    result = asyncio.run(fetch_available_times(...))
-
     if isinstance(result, dict):
         for time, available in result.items():
             print(f"{time}: {'가능' if available else '불가능'}")

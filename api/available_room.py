@@ -16,9 +16,9 @@ async def check_available_rooms(data: AvailableRoomRequest):
                 date=data.date,
                 hour_slots=data.hour_slots
             )
-            
+
             is_all_available = all(result.get(slot, False) for slot in data.hour_slots)
-            
+
             results.append(RoomAvailability(
                 name=room.name,
                 url=room.url,

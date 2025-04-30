@@ -40,5 +40,29 @@ rooms = [
         "branch": "비쥬합주실 3호점",
         "business_id": "917236",
         "biz_item_id": "5098039"
-    }
+    },
+    {
+        "name": "R룸",
+        "branch": "준사운드 사당점",
+        "business_id": "1384809",
+        "biz_item_id": "6649826"
+    },
+    {
+        "name": "S룸",
+        "branch": "준사운드 사당점",
+        "business_id": "1384809",
+        "biz_item_id": "6649835"
+    },
+    {
+        "name": "A룸",
+        "branch": "준사운드 사당점",
+        "business_id": "1384809",
+        "biz_item_id": "6649859"
+    },
+    {
+        "name": "B룸",
+        "branch": "준사운드 사당점",
+        "business_id": "1384809",
+        "biz_item_id": "6677665"
+    },
 ]

@@ -1,6 +1,6 @@
 import httpx
 
-def check_availability(business_id, biz_item_id, date, hour_slots):
+async def check_availability(business_id, biz_item_id, date, hour_slots):
     url = "https://booking.naver.com/graphql?opName=schedule"
     start_dt = f"{date}T00:00:00"
     end_dt = f"{date}T23:59:59"
@@ -34,8 +34,9 @@ def check_availability(business_id, biz_item_id, date, hour_slots):
         }
     }
 
-    response = httpx.post(url, headers=headers, json=body)
-    data = response.json()
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, json=body)
+        data = response.json()
 
     available = {}
     for slot in data["data"]["schedule"]["bizItemSchedule"]["hourly"]:

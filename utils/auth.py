@@ -1,5 +1,5 @@
 import httpx
-from groove_checker.config import LOGIN_ID, LOGIN_PW, LOGIN_URL
+from config import LOGIN_ID, LOGIN_PW, LOGIN_URL
 
 
 async def login(client: httpx.AsyncClient) -> bool:

@@ -1,6 +1,6 @@
 import httpx
 
-async def check_availability(business_id, biz_item_id, date, hour_slots):
+async def get_naver_availability(business_id, biz_item_id, date, hour_slots):
     url = "https://booking.naver.com/graphql?opName=schedule"
     start_dt = f"{date}T00:00:00"
     end_dt = f"{date}T23:59:59"

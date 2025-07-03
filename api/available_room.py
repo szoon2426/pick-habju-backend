@@ -1,40 +1,20 @@
 from fastapi import APIRouter
-from models import AvailabilityRequest, RoomAvailability
-from crawler.naver_checker import check_availability
-import asyncio
-from room import rooms
+from pydantic import BaseModel
+from typing import List
 
-router = APIRouter()
+from service.groove_checker import get_groove_availability
+# from service.dream_checker import get_dream_availability
+from service.naver_checker import get_naver_availability
 
-@router.post("/available-rooms", response_model=list[RoomAvailability])
-async def available_room(data: AvailabilityRequest):
-    async def fetch(room):
-        try:
-            result = await check_availability(
-                business_id=room["business_id"],
-                biz_item_id=room["biz_item_id"],
-                date=data.date,
-                hour_slots=data.hour_slots
-            )
-            available = all(result.get(slot, False) for slot in data.hour_slots)
-            return RoomAvailability(
-                name=room["name"],
-                branch=room["branch"],
-                business_id=room["business_id"],
-                biz_item_id=room["biz_item_id"],
-                available=available,
-                available_slots=result
-            )
-        except Exception as e:
-            print(f"❌ {room['name']} 확인 중 오류:", e)
-            return RoomAvailability(
-                name=room["name"],
-                branch=room["branch"],
-                business_id=room["business_id"],
-                biz_item_id=room["biz_item_id"],
-                available=False,
-                available_slots={}
-            )
+router = APIRouter(prefix="/api/available")
 
-    results = await asyncio.gather(*[fetch(room) for room in rooms])
-    return results
+class AvailabilityRequest(BaseModel):
+    date: str
+    hour_slots: List[str]
+
+@router.post("/")
+async def check_availability(req: AvailabilityRequest):
+    groove_result = await get_groove_availability(req.date, req.hour_slots)
+    naver_result = await get_naver_availability(req.date, req.hour_slots)
+
+    return groove_result + naver_result

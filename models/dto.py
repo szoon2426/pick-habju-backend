@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Dict, Optional
 
-
 # 요청 DTO
 class RoomKey(BaseModel):
     name: str # 합주실 룸 이름(블랙룸)

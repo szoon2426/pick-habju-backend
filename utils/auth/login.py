@@ -1,11 +1,11 @@
 import httpx
-from config import GROOVE_LOGIN_ID, GROOVE_LOGIN_PW, GROOVE_LOGIN_URL, DREAM_LOGIN_URL, DREAM_LOGIN_ID, DREAM_LOGIN_PW, DREAM_BASE_URL # config.py에 추가해야 할 설정들
+from config import LOGIN_ID, LOGIN_PW, GROOVE_LOGIN_URL, DREAM_LOGIN_URL, DREAM_BASE_URL # config.py에 추가해야 할 설정들
 from utils.auth.baseLoginHandler import BaseLoginHandler
 
 class GrooveLoginHandler(BaseLoginHandler):
     def __init__(self):
-        self.login_id = GROOVE_LOGIN_ID
-        self.login_pw = GROOVE_LOGIN_PW
+        self.login_id = LOGIN_ID
+        self.login_pw = LOGIN_PW
         self.login_url = GROOVE_LOGIN_URL
         self.login_headers = {
             "Referer": GROOVE_LOGIN_URL,
@@ -35,8 +35,8 @@ class GrooveLoginHandler(BaseLoginHandler):
 class DreamLoginHandler(BaseLoginHandler):
     def __init__(self):
         self.login_url = DREAM_LOGIN_URL
-        self.login_id = DREAM_LOGIN_ID
-        self.login_pw = DREAM_LOGIN_PW
+        self.login_id = LOGIN_ID
+        self.login_pw = LOGIN_PW
         self.base_url = DREAM_BASE_URL
         # DreamLoginHandler는 이제 별도의 HEADERS나 COOKIES를 하드코딩하지 않습니다.
         # httpx 클라이언트가 자동으로 세션 쿠키를 관리합니다.

@@ -5,12 +5,21 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GROOVE_LOGIN_ID = os.getenv("GROOVE_LOGIN_ID")
-GROOVE_LOGIN_PW = os.getenv("GROOVE_LOGIN_PW")
+LOGIN_ID = os.getenv("LOGIN_ID")
+LOGIN_PW = os.getenv("LOGIN_PW")
+
 GROOVE_BASE_URL = os.getenv("GROOVE_BASE_URL")
-DREAM_LOGIN_ID = os.getenv("DREAM_LOGIN_ID")
-DREAM_LOGIN_PW = os.getenv("DREAM_LOGIN_PW")
 DREAM_BASE_URL = os.getenv("DREAM_BASE_URL")
 
 GROOVE_LOGIN_URL = f"{GROOVE_BASE_URL}/member/login_exec.asp"
 GROOVE_RESERVE_URL = f"{GROOVE_BASE_URL}/reservation/reserve_table_view.asp"
+
+DREAM_LOGIN_URL = f"{DREAM_BASE_URL}/bbs/login_check.php" # 드림 합주실 실제 로그인 URL
+DREAM_HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Content-Type": "application/x-www-form-urlencoded"
+}
+DREAM_COOKIES = {
+    'PHPSESSID': 'your_dream_php_session_id',
+    'e1192aefb64683cc97abb83c71057733': 'your_dream_cookie_value'
+}

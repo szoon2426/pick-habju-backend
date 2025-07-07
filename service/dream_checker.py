@@ -5,7 +5,8 @@ import sys
 import socket
 import os
 import json
-#import asyncio
+import asyncio
+from utils.room_loader import load_rooms
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -19,8 +20,13 @@ COOKIES = {
     'e1192aefb64683cc97abb83c71057733': 'Ym9va2luZw%3D%3D'
 }
 
-#date랑 hour_slots의 hour를 드립합주실 response에 맞게 수정해야함
-async def get_dream_availability(business_id, biz_item_id, date, hour_slots):
+async def get_dream_availability(biz_item_id, date, hour_slots):
+   tasks = [dream_room_checker(id, date, hour_slots) for id in biz_item_id]
+   results = await asyncio.gather(*tasks)
+   print(results)
+   return results
+
+async def dream_room_checker(biz_item_id, date, hour_slots):
     try:
         socket.gethostbyname("xn--hy1bm6g6ujjkgomr.com")
         print("[🔧 DNS 프리패칭 완료]")
@@ -50,20 +56,13 @@ async def get_dream_availability(business_id, biz_item_id, date, hour_slots):
           available_slots[time] = True if 'active' in classes else False
       else:
           available_slots[time] = False
-
       if available_slots[time] == False:
          available = False  
-
-    current_dir = os.path.dirname(__file__)  # dream_checker.py의 경로
-    room_path = os.path.join(current_dir, '..', 'data', 'rooms.json')
-
-    # JSON 파일 열기
-    with open(room_path, 'r', encoding='utf-8') as f:
-        rooms = json.load(f)
     
-    matches = [ (r["name"], r["branch"]) for r in rooms if r["biz_item_id"] == biz_item_id]
+    rooms = load_rooms()
+    matches = [ (r["name"], r["branch"], r["business_id"]) for r in rooms if r["biz_item_id"] == biz_item_id]
     if matches:
-       name, branch = matches[0]
+       name, branch, business_id = matches[0]
     
     result = {}
     result["name"] = name
@@ -75,4 +74,4 @@ async def get_dream_availability(business_id, biz_item_id, date, hour_slots):
 
     return result
 #테스트 코드
-#asyncio.run(get_dream_availability("dream_sadang", "25", "2025-07-08", ["16:00", "17:00"]))
+asyncio.run(get_dream_availability(["25", "26"], "2025-07-08", ["16:00", "17:00"]))

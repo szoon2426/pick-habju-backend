@@ -7,6 +7,8 @@ import os
 import json
 import asyncio
 from utils.room_loader import load_rooms
+from models.dto import RoomKey
+from models.dto import RoomAvailability
 
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -20,13 +22,14 @@ COOKIES = {
     'e1192aefb64683cc97abb83c71057733': 'Ym9va2luZw%3D%3D'
 }
 
-async def get_dream_availability(biz_item_id, date, hour_slots):
-   tasks = [dream_room_checker(id, date, hour_slots) for id in biz_item_id]
+async def get_dream_availability(date, hour_slots, dream_rooms):
+   tasks = [dream_room_checker(date, hour_slots, room.biz_item_id) for room in dream_rooms]
    results = await asyncio.gather(*tasks)
    print(results)
    return results
 
-async def dream_room_checker(biz_item_id, date, hour_slots):
+
+async def dream_room_checker(date, hour_slots, biz_item_id):
     try:
         socket.gethostbyname("xn--hy1bm6g6ujjkgomr.com")
         print("[🔧 DNS 프리패칭 완료]")
@@ -38,8 +41,8 @@ async def dream_room_checker(biz_item_id, date, hour_slots):
         'sch_date': date
     }
 
-    async with httpx.AsyncClient() as client:
-      response = await client.post(URL, headers=HEADERS, cookies=COOKIES, data=data)
+    async with httpx.AsyncClient(cookies=COOKIES) as client:
+      response = await client.post(URL, headers=HEADERS, data=data)
       response_data = response.json()
 
     available = True
@@ -64,14 +67,6 @@ async def dream_room_checker(biz_item_id, date, hour_slots):
     if matches:
        name, branch, business_id = matches[0]
     
-    result = {}
-    result["name"] = name
-    result["branch"] = branch
-    result["business_id"] = business_id
-    result["available"] = available
-    result["available_slots"] = available_slots
-    #print(result)
-
-    return result
-#테스트 코드
-asyncio.run(get_dream_availability(["25", "26"], "2025-07-08", ["16:00", "17:00"]))
+    return RoomAvailability(name = name, branch = branch, business_id=business_id, biz_item_id=biz_item_id, available=available, available_slots=available_slots)
+#나만의 테스트 코드
+asyncio.run(get_dream_availability("2025-07-08", ["16:00", "17:00"], [RoomKey(name='D룸', branch='드림합주실 사당점', business_id='dream_sadang', biz_item_id='25'), RoomKey(name='C룸', branch='드림합주실 사당점', business_id='dream_sadang', biz_item_id='28')]))

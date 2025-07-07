@@ -16,9 +16,9 @@ def test_filter_rooms_by_type_print():
     groove_rooms = filter_rooms_by_type(rooms, "groove")
     naver_rooms = filter_rooms_by_type(rooms, "naver")
 
-    print("dream_rooms:", [r.biz_item_id for r in dream_rooms])
-    print("groove_rooms:", [r.biz_item_id for r in groove_rooms])
-    print("naver_rooms:", [r.biz_item_id for r in naver_rooms])
+    print("dream_rooms:", [r.model_dump() for r in dream_rooms])
+    print("groove_rooms:", [r.model_dump() for r in groove_rooms])
+    print("naver_rooms:", [r.model_dump() for r in naver_rooms])
 
     # 아래는 실제 테스트 검증용 (필요시)
     assert all(r.branch == "드림합주실 사당점" for r in dream_rooms)

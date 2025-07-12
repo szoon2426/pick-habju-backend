@@ -37,7 +37,7 @@ async def get_groove_availability(
         rm_ix = RM_IX_MAP.get(last)
         if rm_ix is None:
             continue
-
+        # 매핑 오류
         slots = {t: False for t in hour_slots}
         for hour_str in hour_slots:
             hour_int = int(hour_str.split(":")[0])

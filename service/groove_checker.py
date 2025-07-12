@@ -41,7 +41,7 @@ async def get_groove_availability(
         slots = {t: False for t in hour_slots}
         for hour_str in hour_slots:
             hour_int = int(hour_str.split(":")[0])
-            selector = f'#reserve_time_sadang_{rm_ix}_{hour_int}.reserve_time_off'
+            selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
             elem = soup.select_one(selector)
             if elem:
                 slots[hour_str] = True

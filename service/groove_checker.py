@@ -4,34 +4,24 @@ import httpx
 from config import GROOVE_BASE_URL, GROOVE_RESERVE_URL
 from utils.login import LoginManager
 from models.dto import RoomAvailability, RoomKey
+from datetime import datetime, timedelta
 import asyncio
 
-RM_IX_MAP = {
-    "A": "13",
-    "B": "14",
-    "C": "15",
-    "D": "16",
-}
-
-async def fetch_room_availability(room: RoomKey, hour_slots: List[str], soup: BeautifulSoup) -> RoomAvailability:
-    last = room.biz_item_id.split("-")[-1]
-    rm_ix = RM_IX_MAP.get(last)
-    slots = {t: False for t in hour_slots}
-    if rm_ix is None:
-        return RoomAvailability(
-            name=room.name,
-            branch=room.branch,
-            business_id=room.business_id,
-            biz_item_id=room.biz_item_id,
-            available=False,
-            available_slots=slots
-        )
-    for hour_str in hour_slots:
-        hour_int = int(hour_str.split(":")[0])
+async def fetch_room_availability(room: RoomKey, hour_slots: list, soup: BeautifulSoup) -> RoomAvailability:
+    rm_ix = room.biz_item_id
+    # 입력 예시: ["20:00", "23:00"]
+    # 구간: 20:00~21:00, 21:00~22:00, 22:00~23:00
+    start = datetime.strptime(hour_slots[0], "%H:%M")
+    end = datetime.strptime(hour_slots[1], "%H:%M")
+    slots = {}
+    curr = start
+    while curr < end:
+        hour_str = curr.strftime("%H:%M")
+        hour_int = curr.hour
         selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
         elem = soup.select_one(selector)
-        if elem:
-            slots[hour_str] = True
+        slots[hour_str] = bool(elem)
+        curr += timedelta(hours=1)
     overall = all(slots.values())
     return RoomAvailability(
         name=room.name,

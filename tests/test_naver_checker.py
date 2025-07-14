@@ -1,6 +1,5 @@
 # tests/test_naver_checker.py
 import pytest
-import asyncio
 from service.naver_checker import get_naver_availability
 from models.dto import RoomKey
 

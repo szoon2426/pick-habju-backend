@@ -3,7 +3,7 @@ from typing import List, Dict
 from models.dto import RoomKey, RoomAvailability
 import asyncio
 
-async def _fetch_naver_availability_for_room(date: str, hour_slots: List[str], room: RoomKey) -> RoomAvailability:
+async def fetch_naver_availability_room(date: str, hour_slots: List[str], room: RoomKey) -> RoomAvailability:
     url = "https://booking.naver.com/graphql?opName=schedule"
     start_dt = f"{date}T00:00:00"
     end_dt = f"{date}T23:59:59"
@@ -60,7 +60,7 @@ async def _fetch_naver_availability_for_room(date: str, hour_slots: List[str], r
 
 async def get_naver_availability(date: str, hour_slots: List[str], naver_rooms: List[RoomKey]) -> List[RoomAvailability]:
     tasks = [
-        _fetch_naver_availability_for_room(date, hour_slots, room)
+        fetch_naver_availability_room(date, hour_slots, room)
         for room in naver_rooms
     ]
     return await asyncio.gather(*tasks)

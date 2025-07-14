@@ -13,6 +13,35 @@ RM_IX_MAP = {
     "D": "16",
 }
 
+async def fetch_room_availability(room: RoomKey, hour_slots: List[str], soup: BeautifulSoup) -> RoomAvailability:
+    last = room.biz_item_id.split("-")[-1]
+    rm_ix = RM_IX_MAP.get(last)
+    slots = {t: False for t in hour_slots}
+    if rm_ix is None:
+        return RoomAvailability(
+            name=room.name,
+            branch=room.branch,
+            business_id=room.business_id,
+            biz_item_id=room.biz_item_id,
+            available=False,
+            available_slots=slots
+        )
+    for hour_str in hour_slots:
+        hour_int = int(hour_str.split(":")[0])
+        selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
+        elem = soup.select_one(selector)
+        if elem:
+            slots[hour_str] = True
+    overall = all(slots.values())
+    return RoomAvailability(
+        name=room.name,
+        branch=room.branch,
+        business_id=room.business_id,
+        biz_item_id=room.biz_item_id,
+        available=overall,
+        available_slots=slots
+    )
+
 async def get_groove_availability(
     date: str,
     hour_slots: List[str],
@@ -30,29 +59,7 @@ async def get_groove_availability(
         )
 
     soup = BeautifulSoup(resp.text, "html.parser")
-    results: List[RoomAvailability] = []
-
-    for room in rooms:
-        last = room.biz_item_id.split("-")[-1]
-        rm_ix = RM_IX_MAP.get(last)
-        if rm_ix is None:
-            continue
-        slots = {t: False for t in hour_slots}
-        for hour_str in hour_slots:
-            hour_int = int(hour_str.split(":")[0])
-            selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
-            elem = soup.select_one(selector)
-            if elem:
-                slots[hour_str] = True
-
-        overall = all(slots.values())
-        results.append(RoomAvailability(
-            name=room.name,
-            branch=room.branch,
-            business_id=room.business_id,
-            biz_item_id=room.biz_item_id,
-            available=overall,
-            available_slots=slots
-        ))
-
+    # 각 방별로 병렬 처리
+    tasks = [fetch_room_availability(room, hour_slots, soup) for room in rooms]
+    results = await asyncio.gather(*tasks)
     return results

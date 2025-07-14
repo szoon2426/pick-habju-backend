@@ -9,7 +9,7 @@ async def test_get_dream_availability():
         RoomKey(name="D룸", branch="드림합주실 사당점", business_id="dream_sadang", biz_item_id="29"),
         RoomKey(name="C룸", branch="드림합주실 사당점", business_id="dream_sadang", biz_item_id="28"),
     ]
-  result = await get_dream_availability("2025-07-08", ["16:00", "17:00"], rooms)
+  result = await get_dream_availability("2025-07-24", ["13:00", "14:00"], rooms)
   # ✅ 결과가 리스트인지 확인
   assert isinstance(result, list)
   assert len(result) == 2

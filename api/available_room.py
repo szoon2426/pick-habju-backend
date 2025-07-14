@@ -29,4 +29,6 @@ async def your_handler(request: AvailabilityRequest):
         hour_slots=request.hour_slots,
         results=results,
         available_biz_item_ids=[r.biz_item_id for r in results if r.available]
+
     )
+

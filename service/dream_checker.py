@@ -31,8 +31,9 @@ async def _fetch_dream_availability_room(date: str, hour_slots: List[str], biz_i
         'sch_date': date
     }
 
-    response_data = load_client(_URL, headers=HEADERS, data=data)
-    
+    response = await load_client(_URL, headers=HEADERS, data=data)
+    response_data = response.json()
+
     available = True
     available_slots = {}
     items_html = html.unescape(response_data.get("items", ""))

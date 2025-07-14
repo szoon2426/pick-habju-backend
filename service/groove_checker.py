@@ -17,7 +17,7 @@ async def get_groove_availability(
     date: str,
     hour_slots: List[str],
     rooms: List[RoomKey]
-) -> RoomAvailability:
+) -> List[RoomAvailability]:
     async with httpx.AsyncClient() as client:
         await LoginManager.login(client)
         resp = await client.post(
@@ -28,33 +28,31 @@ async def get_groove_availability(
                 "Referer": f"{GROOVE_BASE_URL}/reservation/reserve.asp"
             }
         )
-        soup = BeautifulSoup(resp.text, "html.parser")
 
-    async def check_room(room: RoomKey) -> RoomAvailability:
+    soup = BeautifulSoup(resp.text, "html.parser")
+    results: List[RoomAvailability] = []
+
+    for room in rooms:
         last = room.biz_item_id.split("-")[-1]
         rm_ix = RM_IX_MAP.get(last)
+        if rm_ix is None:
+            continue
         slots = {t: False for t in hour_slots}
-        if rm_ix:
-            for hour_str in hour_slots:
-                hour_int = int(hour_str.split(":")[0])
-                selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
-                elem = soup.select_one(selector)
-                if elem:
-                    slots[hour_str] = True
+        for hour_str in hour_slots:
+            hour_int = int(hour_str.split(":")[0])
+            selector = f'#reserve_time_{rm_ix}_{hour_int}.reserve_time_off'
+            elem = soup.select_one(selector)
+            if elem:
+                slots[hour_str] = True
+
         overall = all(slots.values())
-        return RoomAvailability(
+        results.append(RoomAvailability(
             name=room.name,
             branch=room.branch,
             business_id=room.business_id,
             biz_item_id=room.biz_item_id,
             available=overall,
             available_slots=slots
-        )
+        ))
 
-    results = await asyncio.gather(*[check_room(room) for room in rooms])
-
-    # 예약 가능한 방 중 첫 번째 반환, 없으면 첫 번째 방 반환
-    for r in results:
-        if r.available:
-            return r
-    return results[0] if results else None
+    return results

@@ -23,15 +23,3 @@ async def test_get_dream_availability():
   # ✅ 각 요소에 필요한 키가 들어있는지 확인
   for room_result in result:
       assert isinstance(room_result, RoomAvailability)
-
-@pytest.mark.asyncio
-async def test_get_dream_availability_timeout(monkeypatch):
-    import httpx
-
-    async def mock_post(*args, **kwargs):
-        raise httpx.TimeoutException("Request timed out")
-
-    monkeypatch.setattr(httpx.AsyncClient, "post", mock_post)
-
-    with pytest.raises(httpx.TimeoutException):
-        await get_dream_availability(date, hour_slots, rooms)

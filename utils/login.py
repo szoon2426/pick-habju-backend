@@ -9,7 +9,7 @@ class LoginManager:
         if not LOGIN_ID or not LOGIN_PW:
             raise ValueError("환경변수 LOGIN_ID/LOGIN_PW 설정 필요")
         url = f"{GROOVE_BASE_URL}/member/login_exec.asp"
-        await client.post(
+        response = await client.post(
             url,
             data={"login_id": LOGIN_ID, "login_pw": LOGIN_PW},
             headers={
@@ -17,3 +17,9 @@ class LoginManager:
                 "Content-Type": "application/x-www-form-urlencoded"
             }
         )
+        if response.status_code < 200 or response.status_code >= 300:
+            raise httpx.HTTPStatusError(
+                f"Login failed with status code {response.status_code}",
+                request=response.request,
+                response=response
+            )

@@ -69,25 +69,25 @@
   "name": "A룸",
   "branch": "그루브 사당점",
   "business_id": "sadang",
-  "biz_item_id": "groove-A"
+  "biz_item_id": "13"
   },
   {
   "name": "B룸",
   "branch": "그루브 사당점",
   "business_id": "sadang",
-  "biz_item_id": "groove-B"
+  "biz_item_id": "14"
   },  
   {
   "name": "C룸",
   "branch": "그루브 사당점",
   "business_id": "sadang",
-  "biz_item_id": "groove-C"
+  "biz_item_id": "15"
   },
   {
   "name": "D룸",
   "branch": "그루브 사당점",
   "business_id": "sadang",
-  "biz_item_id": "groove-D"
+  "biz_item_id": "16"
   },
   {
   "name": "V룸",

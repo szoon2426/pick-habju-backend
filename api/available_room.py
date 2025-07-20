@@ -10,7 +10,7 @@ from service.groove_checker import get_groove_availability
 
 RoomResult = Union[RoomAvailability, Exception]
 
-router = APIRouter(prefix="/api/available")
+router = APIRouter(prefix="/api/rooms/availability")
 
 @router.post("/")
 async def your_handler(request: AvailabilityRequest):

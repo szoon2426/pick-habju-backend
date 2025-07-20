@@ -1,12 +1,14 @@
 # tests/test_naver_checker.py
 import pytest
+
+from datetime import datetime, timedelta
 from service.naver_checker import get_naver_availability
 from models.dto import RoomKey
 
 @pytest.mark.asyncio
 async def test_get_naver_availability():
     # 실제 테스트용 파라미터를 여기에 입력하세요
-    date = "2025-07-12"
+    date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
     hour_slots = ["15:00", "16:00", "17:00"]
     naver_rooms = [
         RoomKey(name="Classic", branch="비쥬합주실 3호점", business_id="917236", biz_item_id="5098039"),

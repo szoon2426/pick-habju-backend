@@ -1,12 +1,7 @@
 from exception.base_exception import BaseCustomException
 
-
-class RoomKeyFieldMissingError(BaseCustomException):
-    error_code = "Room-001"
-    message = "RoomKey 정보가 누락되었습니다."
-    status_code = 400
-
-class RoomKeyNotFoundError(BaseCustomException):
-    error_code = "Room-002"
-    message = "RoomKey가 존재하지 않습니다."
-    status_code = 404
+class ResponseMismatchError(BaseCustomException):
+    """요청한 방과 응답한 방의 biz_item_id가 일치하지 않을 때 발생"""
+    error_code = "Response-001"
+    message = "요청/응답 biz_item_id 불일치"
+    status_code = 500

@@ -1,4 +1,3 @@
-# tests/test_groove_service.py
 import pytest
 from datetime import datetime, timedelta
 from models.dto import AvailabilityResponse, RoomKey

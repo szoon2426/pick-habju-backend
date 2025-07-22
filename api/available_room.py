@@ -11,8 +11,6 @@ from service.groove_checker import get_groove_availability
 router = APIRouter(prefix="/api/rooms/availability")
 RoomResult = Union[RoomAvailability, Exception]
 
-router = APIRouter(prefix="/api/rooms/availability")
-
 @router.post("/")
 async def your_handler(request: AvailabilityRequest):
     dream_rooms = filter_rooms_by_type(request.rooms, "dream")

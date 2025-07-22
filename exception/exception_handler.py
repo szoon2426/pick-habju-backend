@@ -1,7 +1,7 @@
 from fastapi import Request
 from fastapi.responses import JSONResponse
 from datetime import datetime
-from exception.common_exception import BaseCustomException
+from exception.base_exception import BaseCustomException
 
 async def custom_exception_handler(request: Request, exc: BaseCustomException):
     return JSONResponse(

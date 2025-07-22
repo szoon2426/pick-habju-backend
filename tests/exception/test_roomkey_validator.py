@@ -1,6 +1,6 @@
 import pytest
 from utils.validate.common.roomkey_validator import validate_room_key_fields, validate_room_key_exists
-from exception.common_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
+from exception.common.roomkey_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
 from models.dto import RoomKey
 
 def test_validate_room_key_field_missing():

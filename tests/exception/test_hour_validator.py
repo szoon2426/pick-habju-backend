@@ -1,6 +1,6 @@
 import pytest
 from utils.validate.common.hour_validator import validate_hour_slot_format, validate_hour_slot_not_past
-from exception.common_exception import InvalidHourSlotError, PastHourSlotNotAllowedError
+from exception.common.hour_excpetion import InvalidHourSlotError, PastHourSlotNotAllowedError
 from datetime import datetime, timedelta
 
 # 형식 실패 케이스

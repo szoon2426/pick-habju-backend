@@ -1,6 +1,6 @@
 from utils.room_loader import load_rooms
 from models.dto import RoomKey
-from exception.common_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
+from exception.common.roomkey_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
 
 def validate_room_key_fields(room: RoomKey):
     """RoomKey 필수 필드 누락 검증"""

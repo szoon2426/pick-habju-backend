@@ -1,7 +1,7 @@
 import re
 from datetime import datetime
 from typing import List
-from exception.common_exception import InvalidHourSlotError, PastHourSlotNotAllowedError
+from exception.common.hour_excpetion import InvalidHourSlotError, PastHourSlotNotAllowedError
 
 HOUR_PATTERN = r"^\d{2}:\d{2}$"
 

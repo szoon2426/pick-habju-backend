@@ -3,7 +3,7 @@ from typing import List
 from datetime import datetime, date as dt_date
 from utils.room_loader import load_rooms
 from models.dto import RoomKey
-from exception.common_exception import InvalidDateFormatError, InvalidHourSlotError, InvalidRoomKeyError
+from exception.common_exception import InvalidDateFormatError, InvalidHourSlotError, InvalidRoomKeyError, ResponseMismatchError
 
 DATE_PATTERN = r"^\d{4}-\d{2}-\d{2}$"
 HOUR_PATTERN = r"^\d{2}:\d{2}$"
@@ -46,3 +46,13 @@ def validate_room_key(room: RoomKey):
     )
     if not found:
         raise InvalidRoomKeyError(f"RoomKey가 rooms.json에 존재하지 않습니다: {room}")
+
+def validate_response_rooms(requested_rooms, response_rooms):
+    req_ids = set(r.biz_item_id for r in requested_rooms)
+    res_ids = set(r.biz_item_id for r in response_rooms)
+    if req_ids != res_ids:
+        missing = req_ids - res_ids
+        extra = res_ids - req_ids
+        raise ResponseMismatchError(
+            f"요청/응답 biz_item_id 불일치: 누락={missing}, 과잉={extra}"
+        )

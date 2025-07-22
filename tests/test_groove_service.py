@@ -1,12 +1,12 @@
 import pytest
 from datetime import datetime, timedelta
-from models.dto import AvailabilityResponse, RoomKey
+
+from exception.groove_exception import GrooveLoginError, GrooveCredentialError
+from models.dto import RoomKey
 from service.groove_checker import get_groove_availability
 
 @pytest.mark.asyncio
 async def test_get_groove_availability():
-
-    # 실제 테스트용 파라미터를 여기에 입력하세요
     date = (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")
     hour_slots = ["20:00", "23:00"]
     groove_rooms = [
@@ -17,3 +17,19 @@ async def test_get_groove_availability():
 
     result = await get_groove_availability(date, hour_slots, groove_rooms)
     print(result)  # 가공 없이 그대로 출력
+
+@pytest.mark.asyncio
+async def test_groove_login_error():
+    with pytest.raises(GrooveLoginError) as exc_info:
+        raise GrooveLoginError()
+    assert exc_info.value.error_code == "Login-001"
+    assert exc_info.value.message == "로그인 중 문제가 발생했습니다. 서버 오류!"
+    assert exc_info.value.status_code == 500
+
+@pytest.mark.asyncio
+async def test_groove_credential_error():
+    with pytest.raises(GrooveCredentialError) as exc_info:
+        raise GrooveCredentialError()
+    assert exc_info.value.error_code == "Login-001"
+    assert exc_info.value.message == "로그인 중 문제가 발생했습니다. 환경 설정이 필요합니다 Login, Password"
+    assert exc_info.value.status_code == 401

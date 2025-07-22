@@ -7,11 +7,10 @@ from models.dto import RoomAvailability, RoomKey
 from exception.groove_exception import GrooveLoginError, GrooveCredentialError
 import asyncio
 
-from utils.validate.common_validator import (
-    validate_date,
-    validate_hour_slots,
-    validate_room_key
-)
+from utils.validate.common.date_validator import validate_date
+from utils.validate.common.hour_validator import validate_hour_slots
+from utils.validate.common.roomkey_validator import validate_room_key
+
 
 # --- 입력값 검증 함수 ---
 def validate_inputs(date: str, hour_slots: List[str], rooms: List[RoomKey]):

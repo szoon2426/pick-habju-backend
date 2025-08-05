@@ -1,14 +1,16 @@
 import httpx
 from typing import List, Dict, Union
+
+from app.exception.common.date_exception import InvalidDateFormatError
+from app.exception.common.hour_excpetion import InvalidHourSlotError
 from app.models.dto import RoomKey, RoomAvailability
 from app.exception.naver_exception import NaverAvailabilityError
-from utils.validate.common_validator import (
-    validate_date, validate_hour_slots, validate_room_key,  InvalidDateFormatError,
-    InvalidHourSlotError,
-    InvalidRoomKeyError,
-)
+
 import asyncio
 
+from app.validate.date_validator import validate_date
+from app.validate.hour_validator import validate_hour_slots
+from app.validate.roomkey_validator import validate_room_key
 
 RoomResult = Union[RoomAvailability, Exception]
 
@@ -90,7 +92,7 @@ async def get_naver_availability(
         print(f"[시간 형식 오류]: {e}")
         raise
 
-    async def safe_fetch(room: RoomKey) -> RoomResult:
+    async def safe_fetch(room: RoomKey, InvalidRoomKeyError=None) -> RoomResult:
         try:
             validate_room_key(room)
             return await fetch_naver_availability_room(date, hour_slots, room)

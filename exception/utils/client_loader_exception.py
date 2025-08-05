@@ -1,4 +1,4 @@
-from exception.base_exception import BaseCustomException
+from app.exception.base_exception import BaseCustomException
 
 class RequestFailedError(BaseCustomException):
     """요청에 실패한 경우"""

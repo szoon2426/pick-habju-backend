@@ -14,4 +14,8 @@ class PastHourSlotNotAllowedError(BaseCustomException):
     message = "과거 시간은 허용되지 않습니다."
     status_code = 400
 
-# 근데 여기에 시간슬롯 연속
+class HourDiscontinuousError(BaseCustomException):
+    """시간 입력이 연속적인 값이 아닐 경우"""
+    error_code = "Hour-003"
+    message = "연속적인 시간 값을 입력해야합니다."
+    status_code = 400

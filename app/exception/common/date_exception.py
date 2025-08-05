@@ -1,6 +1,5 @@
 from app.exception.base_exception import BaseCustomException
 
-
 class InvalidDateFormatError(BaseCustomException):
     """날짜 형식이 잘못된 경우"""
     error_code = "Date-001"

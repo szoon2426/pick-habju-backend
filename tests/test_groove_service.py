@@ -36,3 +36,4 @@ async def test_groove_credential_error():
     assert exc_info.value.error_code == "Login-002"
     assert exc_info.value.message == "로그인 중 문제가 발생했습니다. 환경 설정이 필요합니다 Login, Password"
     assert exc_info.value.status_code == 401
+    

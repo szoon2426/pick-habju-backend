@@ -1,5 +1,5 @@
 import pytest
-from app.validate import validate_hour_slot_format, validate_hour_slot_not_past
+from app.validate.hour_validator import validate_hour_slot_format, validate_hour_slot_not_past, validate_hour_continuous
 from app.exception.common.hour_excpetion import InvalidHourSlotError, PastHourSlotNotAllowedError
 from datetime import datetime, timedelta
 
@@ -32,3 +32,28 @@ def test_validate_hour_slots_past_time_today():
     today = now.strftime("%Y-%m-%d")
     with pytest.raises(PastHourSlotNotAllowedError):
         validate_hour_slot_not_past(slot, today)
+
+def test_validate_hour_continuous_valid():
+    """연속적인 시간 슬롯이면 정상 통과한다."""
+    date = datetime.now().strftime("%Y-%m-%d")
+    slots = ["09:00", "10:00", "11:00"]
+    validate_hour_continuous(slots, date)  # 예외 없어야 함
+
+def test_validate_hour_continuous_invalid_gap():
+    """시간 슬롯 간격이 1시간이 아니면 InvalidHourSlotError 예외가 발생한다."""
+    date = datetime.now().strftime("%Y-%m-%d")
+    slots = ["09:00", "11:00", "12:00"]  # 09시, 11시 사이 간격 2시간
+    with pytest.raises(InvalidHourSlotError):
+        validate_hour_continuous(slots, date)
+
+def test_validate_hour_continuous_unsorted_slots():
+    """정렬되지 않은 연속 시간 슬롯도 정상 통과한다."""
+    date = datetime.now().strftime("%Y-%m-%d")
+    slots = ["11:00", "09:00", "10:00"]
+    validate_hour_continuous(slots, date)  # 정렬은 내부에서 처리
+
+def test_validate_hour_continuous_single_slot():
+    """하나의 시간 슬롯만 있으면 연속성 검사 통과."""
+    date = datetime.now().strftime("%Y-%m-%d")
+    slots = ["09:00"]
+    validate_hour_continuous(slots, date)

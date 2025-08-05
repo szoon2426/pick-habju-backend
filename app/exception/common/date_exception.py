@@ -1,4 +1,4 @@
-from exception.base_exception import BaseCustomException
+from app.exception.base_exception import BaseCustomException
 
 
 class InvalidDateFormatError(BaseCustomException):

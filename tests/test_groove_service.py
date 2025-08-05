@@ -1,8 +1,8 @@
-# tests/test_groove_service.py
+# te/test_groove_service.py
 import pytest
 from datetime import datetime, timedelta
-from models.dto import AvailabilityResponse, RoomKey
-from service.groove_checker import get_groove_availability
+from app.models.dto import RoomKey
+from app.crawler.groove_checker import get_groove_availability
 
 @pytest.mark.asyncio
 async def test_get_groove_availability():

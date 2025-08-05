@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from typing import Union, List
 
-from utils.room_router import filter_rooms_by_type
-from models.dto import AvailabilityRequest, AvailabilityResponse, RoomAvailability
+from app.utils.room_router import filter_rooms_by_type
+from app.models.dto import AvailabilityRequest, AvailabilityResponse, RoomAvailability
 
-from service.dream_checker import get_dream_availability
-from service.naver_checker import get_naver_availability
-from service.groove_checker import get_groove_availability
+from app.crawler.dream_checker import get_dream_availability
+from app.crawler.naver_checker import get_naver_availability
+from app.crawler.groove_checker import get_groove_availability
 
 RoomResult = Union[RoomAvailability, Exception]
 

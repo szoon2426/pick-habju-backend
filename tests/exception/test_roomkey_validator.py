@@ -1,7 +1,7 @@
 import pytest
-from utils.validate.common.roomkey_validator import validate_room_key_fields, validate_room_key_exists
-from exception.common.roomkey_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
-from models.dto import RoomKey
+from app.validate import validate_room_key_fields, validate_room_key_exists
+from app.exception.common.roomkey_exception import RoomKeyFieldMissingError, RoomKeyNotFoundError
+from app.models.dto import RoomKey
 
 def test_validate_room_key_field_missing():
     """RoomKey의 필수 필드가 누락된 경우 RoomKeyFieldMissingError 예외가 발생해야 한다."""

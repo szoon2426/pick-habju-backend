@@ -1,7 +1,7 @@
-# tests/test_room_router.py
+# te/test_room_router.py
 
-from utils.room_router import filter_rooms_by_type
-from models.dto import RoomKey
+from app.utils.room_router import filter_rooms_by_type
+from app.models.dto import RoomKey
 
 def test_filter_rooms_by_type_print():
     rooms = [

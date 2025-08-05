@@ -1,9 +1,9 @@
-# tests/test_naver_checker.py
+# te/test_naver_checker.py
 import pytest
 
 from datetime import datetime, timedelta
-from service.naver_checker import get_naver_availability
-from models.dto import RoomKey
+from app.crawler.naver_checker import get_naver_availability
+from app.models.dto import RoomKey
 
 @pytest.mark.asyncio
 async def test_get_naver_availability():

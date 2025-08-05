@@ -1,7 +1,7 @@
 import httpx
 from typing import List, Dict, Union
-from models.dto import RoomKey, RoomAvailability
-from exception.naver_exception import NaverAvailabilityError
+from app.models.dto import RoomKey, RoomAvailability
+from app.exception.naver_exception import NaverAvailabilityError
 from utils.validate.common_validator import (
     validate_date, validate_hour_slots, validate_room_key,  InvalidDateFormatError,
     InvalidHourSlotError,

@@ -1,8 +1,8 @@
 import pytest
 from datetime import datetime, timedelta
-from models.dto import RoomKey
-from models.dto import RoomAvailability
-from service.dream_checker import get_dream_availability
+from app.models.dto import RoomKey
+from app.models.dto import RoomAvailability
+from app.crawler.dream_checker import get_dream_availability
 
 @pytest.mark.asyncio
 async def test_get_dream_availability():

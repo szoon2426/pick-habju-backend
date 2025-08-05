@@ -2,7 +2,7 @@ from app.exception.base_exception import BaseCustomException
 
 class RoomKeyFieldMissingError(BaseCustomException):
     error_code = "Room-001"
-    message = "RoomKey 정보가 누락되었습니다."
+    message = "RoomKey 필드가 누락되었습니다."
     status_code = 400
 
 class RoomKeyNotFoundError(BaseCustomException):

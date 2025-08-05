@@ -3,6 +3,7 @@ import re
 import html
 import sys
 import asyncio
+import datetime
 from app.utils.room_loader import load_rooms
 from app.models.dto import RoomKey
 from app.models.dto import RoomAvailability
@@ -10,11 +11,10 @@ from app.utils.client_loader import load_client
 from typing import List, Union
 
 from app.exception.dream_exception import DreamAvailabilityError
-from utils.validate.common_validator import (
-    validate_date, validate_hour_slots, validate_room_key,  InvalidDateFormatError,
-    InvalidHourSlotError,
-    InvalidRoomKeyError,
-)
+from app.validate.date_validator import validate_date
+from app.validate.hour_validator import validate_hour_slots
+from app.validate.response_validator import validate_response_rooms
+from app.validate.roomkey_validator import validate_room_key
 
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -25,55 +25,50 @@ HEADERS = {
     "Content-Type": "application/x-www-form-urlencoded"
 }
 
+date_limit = 121
 RoomResult = Union[RoomAvailability, Exception]
+available = Union[bool, str]
 
 async def get_dream_availability(
       date: str, 
       hour_slots: List[str], 
       dream_rooms: List[RoomKey]
 ) -> List[RoomAvailability]:
-   try:
-      validate_date(date)
-   except InvalidDateFormatError as e:
-      print(f"[날짜 형식 오류]: {e}")
-      raise
-   except PastDateNotAllowedError as e:
-       raise
+    validate_date(date)
+    validate_hour_slots(hour_slots)
+    
+    today = datetime.today().date()
+
+    if (date - today).days > date_limit:
+        # 모든 room에 대해 "unknown" RoomAvailability 생성
+        return [
+            RoomAvailability(
+                name=room.name,
+                branch=room.branch,
+                business_id=room.business_id,
+                biz_item_id=room.biz_item_id,
+                available="unknown",
+                available_slots={hour_str: "unknown" for hour_str in hour_slots},
+            )
+            for room in dream_rooms
+        ]
+
    
-   try:
-      validate_hour_slots(hour_slots)
-   except InvalidHourSlotError as e:
-      print(f"[시간 형식 오류]: {e}")
-      raise
-   except PastHourSlotNotAllowedError as e:
-       raise
-   
-   return await asyncio.gather(*[safe_fetch(date, hour_slots, room.biz_item_id) for room in dream_rooms])
+    return await asyncio.gather(*[safe_fetch(date, hour_slots, room.biz_item_id) for room in dream_rooms])
 
 async def safe_fetch(date, hour_slots, room: RoomKey) -> RoomResult:
-      try:
-         validate_room_key(room)
-      except RoomKeyNotFoundError as e:
-         raise
-      except RoomKeyFieldMissingError as e:
-         raise
-      
-      try:
-          return await _fetch_dream_availability_room(date, hour_slots, room)
-      except DreamAvailabilityError as e:
-          raise
+    validate_room_key(room)
+    return await _fetch_dream_availability_room(date, hour_slots, room)
+
 
 async def _fetch_dream_availability_room(date: str, hour_slots: List[str], biz_item_id: RoomKey) -> RoomAvailability:
     data = {
         'rm_ix': biz_item_id,
         'sch_date': date    
     }
-
-    try:
-        response = await load_client(_URL, headers=HEADERS, data=data)
-    except RequestFailedError as e:
-        raise
-
+    
+    response = await load_client(_URL, headers=HEADERS, data=data)
+    
     try:    
         response_data = response.json()
     except Exception as e:

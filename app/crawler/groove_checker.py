@@ -1,9 +1,9 @@
 from typing import List
 from bs4 import BeautifulSoup
 import httpx
-from config import GROOVE_BASE_URL, GROOVE_RESERVE_URL
-from utils.login import LoginManager
-from models.dto import RoomAvailability, RoomKey
+from app.core.config import GROOVE_BASE_URL, GROOVE_RESERVE_URL
+from app.utils.login import LoginManager
+from app.models.dto import RoomAvailability, RoomKey
 from datetime import datetime, timedelta
 import asyncio
 

@@ -1,5 +1,5 @@
 import httpx
-from config import GROOVE_BASE_URL, LOGIN_ID, LOGIN_PW, GROOVE_LOGIN_URL
+from app.core.config import GROOVE_BASE_URL, LOGIN_ID, LOGIN_PW, GROOVE_LOGIN_URL
 
 
 class LoginManager:

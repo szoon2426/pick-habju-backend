@@ -1,7 +1,7 @@
 import pytest
-from utils.validate.common.response_validator import validate_response_rooms
-from exception.common.response_exception import ResponseMismatchError
-from models.dto import RoomKey
+from app.validate.response_validator import validate_response_rooms
+from app.exception.common.response_exception import ResponseMismatchError
+from app.models.dto import RoomKey
 from pathlib import Path
 import json
 

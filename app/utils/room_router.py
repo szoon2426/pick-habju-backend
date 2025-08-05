@@ -1,5 +1,5 @@
 from typing import Literal
-from models.dto import RoomKey
+from app.models.dto import RoomKey
 
 RoomType = Literal["dream", "groove", "naver"]
 

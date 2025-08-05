@@ -1,4 +1,4 @@
-from exception.common.response_exception import ResponseMismatchError
+from app.exception.common.response_exception import ResponseMismatchError
 
 def validate_response_rooms(requested_rooms, response_rooms):
     """요청/응답 방 리스트의 biz_item_id 일치 여부 검증"""

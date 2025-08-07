@@ -3,14 +3,14 @@ from bs4 import BeautifulSoup
 import httpx
 from app.core.config import GROOVE_RESERVE_URL, GROOVE_RESERVE_URL1
 from app.exception.common.roomkey_exception import RoomKeyNotFoundError
-from app.exception.groove_exception import GrooveCredentialError, GrooveLoginError
+from app.exception.crawler.groove_exception import GrooveCredentialError, GrooveLoginError
 from app.utils.login import LoginManager
 from app.models.dto import RoomAvailability, RoomKey
 import asyncio
 
 from app.validate.date_validator import validate_date
 from app.validate.hour_validator import validate_hour_slots
-from app.validate.roomkey_validator import validate_room_key, validate_room_key_exists
+from app.validate.roomkey_validator import validate_room_key
 
 
 # --- 입력값 검증 함수 ---

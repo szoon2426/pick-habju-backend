@@ -1,5 +1,6 @@
 import httpx
-from exception.utils.client_loader_exception import RequestFailedError
+from app.exception.api.client_loader_exception import RequestFailedError
+
 
 async def load_client(url: str, **kwargs):
   async with httpx.AsyncClient() as client:

@@ -4,7 +4,7 @@ from typing import List, Dict, Union
 from app.exception.common.date_exception import InvalidDateFormatError
 from app.exception.common.hour_excpetion import InvalidHourSlotError
 from app.models.dto import RoomKey, RoomAvailability
-from app.exception.naver_exception import NaverAvailabilityError
+from app.exception.crawler.naver_exception import NaverAvailabilityError
 
 import asyncio
 

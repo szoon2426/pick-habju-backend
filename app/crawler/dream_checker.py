@@ -1,4 +1,3 @@
-import httpx
 import re
 import html
 import sys
@@ -10,10 +9,9 @@ from app.models.dto import RoomAvailability
 from app.utils.client_loader import load_client
 from typing import List, Union
 
-from app.exception.dream_exception import DreamAvailabilityError
+from app.exception.crawler.dream_exception import DreamAvailabilityError
 from app.validate.date_validator import validate_date
 from app.validate.hour_validator import validate_hour_slots
-from app.validate.response_validator import validate_response_rooms
 from app.validate.roomkey_validator import validate_room_key
 
 
